@@ -20,6 +20,7 @@ class HighschoolsActivity : AppCompatActivity() {
         binding = ActivityHighschoolsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         highschoolViewModel.getHighschoolsLiveData().observe(this) { highschoolsList ->
+            binding.totalSchoolsTextView.text = getString(R.string.total_schools, highschoolsList.size)
             binding.highSchoolsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 adapter = HighschoolsRecyclerAdapter(highschoolsList)
