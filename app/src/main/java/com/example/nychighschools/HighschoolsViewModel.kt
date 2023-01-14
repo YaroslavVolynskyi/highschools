@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
-const val MIN_UPDATE_TIME: Long = 10000L
+const val MIN_UPDATE_TIME: Long = 10L
 
 class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
 
