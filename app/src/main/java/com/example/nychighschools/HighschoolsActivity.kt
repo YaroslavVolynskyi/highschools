@@ -16,12 +16,12 @@ class HighschoolsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHighschoolsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        highschoolViewModel.fetchHighschoolsData()
         highschoolViewModel.getHighschoolsLiveData().observe(this) { highschoolsList ->
             binding.highSchoolsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 adapter = HighschoolsRecyclerAdapter(highschoolsList)
             }
         }
+        highschoolViewModel.fetchHighschoolsData()
     }
 }
