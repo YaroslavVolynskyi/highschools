@@ -1,9 +1,11 @@
 package com.example.nychighschools
 
 import android.content.Context
+import androidx.room.Room
 import com.example.nychighschools.data.HighschoolsApi
 import com.google.gson.GsonBuilder
 import okhttp3.Cache
+import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -20,6 +22,9 @@ object RetrofitProvider {
     fun init(context: Context) {
         okHttpClient = OkHttpClient.Builder()
             .cache(Cache(File(context.cacheDir, "http_cache"), 50L * 1024L * 1024L))
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            })
             .build()
         retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
