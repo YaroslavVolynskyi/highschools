@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.room.EmptyResultSetException
 import com.example.nychighschools.data.Highschool
+import com.example.nychighschools.data.HighschoolSatInfo
 import com.example.nychighschools.database.HighschoolDatabase
 import com.example.nychighschools.utils.PreferenceHelper
 import io.reactivex.Completable
@@ -16,6 +17,7 @@ import io.reactivex.SingleSource
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.BiFunction
 
 const val MIN_UPDATE_TIME: Long = 10L
 
@@ -38,9 +40,13 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
                 if (list.isEmpty() || isTimeForNewUpdate()) {
                     return@flatMap RetrofitProvider.highschoolsApi
                         .getHighSchools()
-                        .doOnSuccess {
+                        .zipWith(RetrofitProvider.highschoolsApi.getSatHighschoolsInfo()) { highschoolsList, satList ->
+                            mergeHighschoolsInfo(highschoolsList, satList)
+                            return@zipWith highschoolsList
+                        }
+                        .doOnSuccess { highschoolsList ->
                             PreferenceHelper.getInstance().saveUpdateTime()
-                            highschoolDao.insertHighschoolsList(it)
+                            highschoolDao.insertHighschoolsList(highschoolsList)
                                 .subscribeOn(HighschoolDatabase.databaseScheduler).subscribe()
                         }
                 } else {
@@ -61,8 +67,20 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
         return highschoolsLiveData
     }
 
+    private fun mergeHighschoolsInfo(highschoolsList: List<Highschool>, satInfoList: List<HighschoolSatInfo>): List<Highschool> {
+        highschoolsList.forEach{ highschool ->
+            satInfoList.find { it.dbn == highschool.dbn }?.let { satInfo ->
+                highschool.satScoreMath = satInfo.satScoreMath
+                highschool.satScoreReading = satInfo.satScoreReading
+                highschool.satScoreWriting = satInfo.satScoreWriting
+            }
+        }
+        return highschoolsList
+    }
+
     private fun isTimeForNewUpdate(): Boolean {
-        return System.currentTimeMillis() - PreferenceHelper.getInstance().getLastUpdateTime() > MIN_UPDATE_TIME
+        return System.currentTimeMillis() - PreferenceHelper.getInstance()
+            .getLastUpdateTime() > MIN_UPDATE_TIME
     }
 
     override fun onCleared() {

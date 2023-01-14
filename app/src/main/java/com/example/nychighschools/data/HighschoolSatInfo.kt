@@ -4,18 +4,19 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class HighschoolSatInfo(
+
     @Expose
-    val dbn: String,
+    val dbn: String?,
     @Expose
     @SerializedName("school_name")
-    val schoolName: String,
+    val schoolName: String?,
     @Expose
     @SerializedName("sat_critical_reading_avg_score")
-    val satScoreReading: Int,
+    val satScoreReading: String?,
     @Expose
     @SerializedName("sat_math_avg_score")
-    val satScoreMath: Int,
+    val satScoreMath: String?,
     @Expose
     @SerializedName("sat_writing_avg_score")
-    val satScoreWriting: Int
+    val satScoreWriting: String?
 )

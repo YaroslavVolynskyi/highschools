@@ -21,5 +21,15 @@ data class Highschool(
     val city: String?,
     @Expose
     @SerializedName("overview_paragraph")
-    val overviewParagraph: String?
+    val overviewParagraph: String?,
+
+    @Expose
+    @SerializedName("sat_critical_reading_avg_score")
+    var satScoreReading: String?,
+    @Expose
+    @SerializedName("sat_math_avg_score")
+    var satScoreMath: String?,
+    @Expose
+    @SerializedName("sat_writing_avg_score")
+    var satScoreWriting: String?
 )
