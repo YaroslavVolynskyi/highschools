@@ -32,4 +32,7 @@ data class Highschool(
     @Expose
     @SerializedName("sat_writing_avg_score")
     var satScoreWriting: String?
-)
+) {
+    @Expose
+    var isExpanded: Boolean = false
+}

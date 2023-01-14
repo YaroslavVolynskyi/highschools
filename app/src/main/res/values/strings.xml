@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">nychighschools</string>
+    <string name="show_sats">Show Sats</string>
+    <string name="hide_sats">Hide Sats</string>
+    <string name="reading_avg_score">Reading average SAT - %s</string>
+    <string name="writing_avg_score">Writing average SAT - %s</string>
+    <string name="math_avg_score">Math average SAT - %s</string>
 </resources>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/recycler_item_padding"
+    android:layout_marginStart="@dimen/recycler_item_padding"
+    android:layout_marginEnd="@dimen/recycler_item_padding"
+    android:elevation="@dimen/highschool_item_elevation"
+    app:cardCornerRadius="@dimen/highschool_item_radius"
+    android:background="@color/highschool_item_background">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/button_padding"
+        >
+
+        <TextView
+            android:id="@+id/schoolName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            tools:text="Highschool Name "
+            android:layout_marginEnd="@dimen/button_padding"
+            app:layout_constraintTop_toTopOf="@id/showHideSat"
+            app:layout_constraintBottom_toBottomOf="@id/showHideSat"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/showHideSat"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/showHideSat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/show_hide_sats_button_background"
+            android:textColor="@android:color/white"
+            android:padding="@dimen/button_padding"
+            android:text="@string/show_sats"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/satContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:gravity="center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/schoolName"
+            app:layout_constraintStart_toStartOf="@id/schoolName"
+            app:layout_constraintEnd_toEndOf="@id/schoolName"
+            >
+
+            <TextView
+                android:id="@+id/satMath"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                />
+            <TextView
+                android:id="@+id/satReading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                />
+            <TextView
+                android:id="@+id/satWriting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

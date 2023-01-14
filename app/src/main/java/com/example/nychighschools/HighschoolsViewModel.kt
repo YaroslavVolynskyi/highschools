@@ -33,6 +33,7 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
      *
      * In onSuccess from server - update database, and last update time.
      */
+    // todo change this fetch data to run 2 requests, put data into database, then get merged info by JOIN
     fun fetchHighschoolsData() {
         val disposable = highschoolDao.getHighschoolsList()
             .subscribeOn(HighschoolDatabase.databaseScheduler)

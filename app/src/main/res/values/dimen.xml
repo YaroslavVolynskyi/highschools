@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="recycler_item_padding">16dp</dimen>
+    <dimen name="highschool_item_radius">4dp</dimen>
+    <dimen name="highschool_item_elevation">4dp</dimen>
+    <dimen name="button_padding">3dp</dimen>
 </resources>
