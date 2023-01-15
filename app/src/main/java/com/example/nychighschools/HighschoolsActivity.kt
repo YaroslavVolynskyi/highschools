@@ -35,6 +35,7 @@ class HighschoolsActivity : AppCompatActivity() {
         }
         highschoolViewModel.getErrorLiveData().observe(this) { showAlertDialog(this, it) }
         highschoolViewModel.fetchHighschoolsData()
+        setSupportActionBar(binding.toolbar)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
