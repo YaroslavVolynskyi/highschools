@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,10 +26,12 @@ class HighschoolsActivity : AppCompatActivity() {
 
         binding.forceRefreshButton.setOnClickListener { highschoolViewModel.forceRefresh() }
         highschoolViewModel.getHighschoolsLiveData().observe(this) { highschoolsList ->
+            binding.loadingIndicator.visibility = View.GONE
             binding.totalSchoolsTextView.text = getString(R.string.total_schools, highschoolsList.size)
             binding.highSchoolsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
                 adapter = HighschoolsRecyclerAdapter(highschoolsList) { highschool ->
+                    // todo later registerForActivityResult if we would need some response from details activity.
                     startActivity(DetailsActivity.getDetailsActivityIntent(this@HighschoolsActivity, highschool))
                 }
                 if (adapter!!.itemCount > 0 && savedInstanceState?.getParcelable<Parcelable>(LIST_STATE_KEY) != null) {
@@ -37,6 +40,11 @@ class HighschoolsActivity : AppCompatActivity() {
             }
         }
         highschoolViewModel.getErrorLiveData().observe(this) { showAlertDialog(this, it) }
+
+        // todo later some other kind of loading indicator can be implemented
+        highschoolViewModel.getLoadingLiveData().observe(this) { shouldShowLoader ->
+            binding.loadingIndicator.visibility = if (shouldShowLoader) View.VISIBLE else View.GONE
+        }
 
         highschoolViewModel.fetchHighschoolsData()
     }

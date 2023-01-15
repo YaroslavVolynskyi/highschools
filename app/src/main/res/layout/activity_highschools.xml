@@ -45,18 +45,25 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_view"
-        android:layout_width="match_parent"
+    <!-- for now this will be sort of loading indicator :) -->
+    <TextView
+        android:id="@+id/loading_indicator"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+        android:layout_marginTop="@dimen/recycler_item_padding"
+        android:visibility="gone"
+        android:text="@string/loading"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/highSchoolsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="@dimen/recycler_item_padding"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/loading_indicator"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

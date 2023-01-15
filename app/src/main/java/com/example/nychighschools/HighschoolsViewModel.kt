@@ -27,6 +27,7 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
 
     private val highschoolsLiveData: MutableLiveData<List<Highschool>> = MutableLiveData()
     private val errorLiveData: SingleLiveData<String> = SingleLiveData()
+    private val loadingLiveData: SingleLiveData<Boolean> = SingleLiveData()
     private val compositeDisposable = CompositeDisposable()
     private val highschoolDao = HighschoolDatabase.getInstance().highschoolDao()
     private val preferehcesHelper = PreferenceHelper.getInstance()
@@ -61,6 +62,8 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { d -> loadingLiveData.postValue(true) }
+            .doFinally{ loadingLiveData.postValue(false) }
             .subscribe({ list ->
                 highschoolsLiveData.postValue(list)
             }, this::handleThrowable)
@@ -83,6 +86,15 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
 
     fun getErrorLiveData(): LiveData<String> {
         return errorLiveData
+    }
+
+    /**
+     * if true is observed - need to show some indicator that loading is in progress (for now will just show
+     * simple text view). Progress bar can be implemented later.
+     * if false is observed - removed loading indicator
+     */
+    fun getLoadingLiveData(): LiveData<Boolean> {
+        return loadingLiveData
     }
 
     private fun mergeHighschoolsInfo(highschoolsList: List<Highschool>, satInfoList: List<HighschoolSatInfo>): List<Highschool> {
