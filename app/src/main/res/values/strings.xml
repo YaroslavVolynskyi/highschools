@@ -6,4 +6,7 @@
     <string name="writing_avg_score">Writing average SAT - %s</string>
     <string name="math_avg_score">Math average SAT - %s</string>
     <string name="total_schools">Schools count %d</string>
+    <string name="ok_button">OK</string>
+    <string name="error_no_internet">No internet connection</string>
+    <string name="refresh">Refresh</string>
 </resources>

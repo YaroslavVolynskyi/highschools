@@ -1,5 +1,8 @@
 package com.example.nychighschools
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
@@ -19,6 +22,7 @@ class HighschoolsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHighschoolsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.forceRefreshButton.setOnClickListener { highschoolViewModel.forceRefresh() }
         highschoolViewModel.getHighschoolsLiveData().observe(this) { highschoolsList ->
             binding.totalSchoolsTextView.text = getString(R.string.total_schools, highschoolsList.size)
             binding.highSchoolsRecyclerView.apply {
@@ -29,6 +33,7 @@ class HighschoolsActivity : AppCompatActivity() {
                 }
             }
         }
+        highschoolViewModel.getErrorLiveData().observe(this) { showAlertDialog(this, it) }
         highschoolViewModel.fetchHighschoolsData()
     }
 
@@ -40,5 +45,19 @@ class HighschoolsActivity : AppCompatActivity() {
             )
         }
         super.onSaveInstanceState(outState)
+    }
+
+    private fun showAlertDialog(context: Context,
+                                message: String?,
+                                okClickListener: () -> Unit = {}) {
+        AlertDialog.Builder(context)
+            .setMessage(message)
+            .setPositiveButton(R.string.ok_button) { dialog, which ->
+                okClickListener.invoke()
+                dialog.dismiss()
+            }
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setCancelable(true)
+            .show()
     }
 }

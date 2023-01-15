@@ -11,6 +11,6 @@ class NycHighschoolsApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
-        RetrofitProvider.init(this)
+        RetrofitProvider.init()
     }
 }

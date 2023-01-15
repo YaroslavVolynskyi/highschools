@@ -9,7 +9,9 @@ import androidx.room.EmptyResultSetException
 import com.example.nychighschools.data.Highschool
 import com.example.nychighschools.data.HighschoolSatInfo
 import com.example.nychighschools.database.HighschoolDatabase
+import com.example.nychighschools.utils.ErrorHandler
 import com.example.nychighschools.utils.PreferenceHelper
+import com.example.nychighschools.utils.SingleLiveData
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -19,13 +21,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 
-const val MIN_UPDATE_TIME: Long = 10L
+const val MIN_UPDATE_TIME: Long = 40000L
 
 class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
 
     private val highschoolsLiveData: MutableLiveData<List<Highschool>> = MutableLiveData()
+    private val errorLiveData: SingleLiveData<String> = SingleLiveData()
     private val compositeDisposable = CompositeDisposable()
     private val highschoolDao = HighschoolDatabase.getInstance().highschoolDao()
+    private val preferehcesHelper = PreferenceHelper.getInstance()
 
     /**
      * Tries to fetch high schools' data from database. If database is still empty, or much time have passed from last update
@@ -33,7 +37,8 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
      *
      * In onSuccess from server - update database, and last update time.
      */
-    // todo change this fetch data to run 2 requests, put data into database, then get merged info by JOIN
+    // todo   change this fetch data to run 2 requests (get schools info, get sat info),
+    // todo   put data into two separate database tables, then get merged info by fetching data from database using JOIN
     fun fetchHighschoolsData() {
         val disposable = highschoolDao.getHighschoolsList()
             .subscribeOn(HighschoolDatabase.databaseScheduler)
@@ -46,8 +51,8 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
                             return@zipWith highschoolsList
                         }
                         .doOnSuccess { highschoolsList ->
-                            PreferenceHelper.getInstance().saveUpdateTime()
                             highschoolDao.insertHighschoolsList(highschoolsList)
+                                .doOnComplete { preferehcesHelper.saveUpdateTime() }
                                 .subscribeOn(HighschoolDatabase.databaseScheduler).subscribe()
                         }
                 } else {
@@ -58,14 +63,26 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ list ->
                 highschoolsLiveData.postValue(list)
-            }, { throwable ->
-                Log.e("fail", throwable.message.toString())
-            })
+            }, this::handleThrowable)
         compositeDisposable.add(disposable)
+    }
+
+    fun forceRefresh() {
+        preferehcesHelper.resetLastUpdateTime()
+        fetchHighschoolsData()
+    }
+
+    private fun handleThrowable(throwable: Throwable) {
+        Log.e("fail", throwable.message.toString())
+        errorLiveData.postValue(ErrorHandler.getErrorMessage(throwable))
     }
 
     fun getHighschoolsLiveData(): LiveData<List<Highschool>> {
         return highschoolsLiveData
+    }
+
+    fun getErrorLiveData(): LiveData<String> {
+        return errorLiveData
     }
 
     private fun mergeHighschoolsInfo(highschoolsList: List<Highschool>, satInfoList: List<HighschoolSatInfo>): List<Highschool> {
@@ -80,8 +97,7 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
     }
 
     private fun isTimeForNewUpdate(): Boolean {
-        return System.currentTimeMillis() - PreferenceHelper.getInstance()
-            .getLastUpdateTime() > MIN_UPDATE_TIME
+        return System.currentTimeMillis() - preferehcesHelper.getLastUpdateTime() > MIN_UPDATE_TIME
     }
 
     override fun onCleared() {

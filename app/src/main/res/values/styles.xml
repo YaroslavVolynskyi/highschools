@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="purple_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/show_hide_sats_button_background</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">@dimen/button_padding</item>
+    </style>
+</resources>

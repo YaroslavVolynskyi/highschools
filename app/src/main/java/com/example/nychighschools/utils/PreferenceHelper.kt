@@ -35,6 +35,10 @@ class PreferenceHelper {
         return getPreferences().getString(UPDATE_TIME_KEY, "0")!!.toLong()
     }
 
+    fun resetLastUpdateTime() {
+        getPreferences().edit().putString(UPDATE_TIME_KEY, "0").apply()
+    }
+
     private fun getPreferences(): SharedPreferences {
         return NycHighschoolsApplication.appContext.getSharedPreferences(UPDATE_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }

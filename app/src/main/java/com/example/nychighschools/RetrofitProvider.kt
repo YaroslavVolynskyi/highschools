@@ -1,16 +1,12 @@
 package com.example.nychighschools
 
-import android.content.Context
-import androidx.room.Room
 import com.example.nychighschools.data.HighschoolsApi
 import com.google.gson.GsonBuilder
-import okhttp3.Cache
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
 
 object RetrofitProvider {
 
@@ -19,9 +15,8 @@ object RetrofitProvider {
     private lateinit var retrofit: Retrofit
     lateinit var highschoolsApi: HighschoolsApi
 
-    fun init(context: Context) {
+    fun init() {
         okHttpClient = OkHttpClient.Builder()
-            .cache(Cache(File(context.cacheDir, "http_cache"), 50L * 1024L * 1024L))
             .addInterceptor(HttpLoggingInterceptor().apply {
                 setLevel(HttpLoggingInterceptor.Level.BODY)
             })
