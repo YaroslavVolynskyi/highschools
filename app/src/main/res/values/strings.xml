@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">nychighschools</string>
+    <string name="app_name">NYC Highschools</string>
     <string name="show_sats">Show Sats</string>
     <string name="hide_sats">Hide Sats</string>
     <string name="reading_avg_score">Reading average SAT - %s</string>
@@ -9,4 +9,17 @@
     <string name="ok_button">OK</string>
     <string name="error_no_internet">No internet connection</string>
     <string name="refresh">Refresh</string>
+    <string name="school_name">school name</string>
+
+    <string name="website">Website: %s</string>
+    <string name="email">Email: %s</string>
+    <string name="fax_number">Fax number: %s</string>
+    <string name="bus">Bus: %s</string>
+    <string name="address">Address: %s</string>
+    <string name="zip">ZIP: %s</string>
+    <string name="total_students">Total students: %s</string>
+    <string name="language_classes">Language classes: %s</string>
+    <string name="extracuricular">Extracuricural activities: %s</string>
+    <string name="overview">Overview: %s</string>
+    <string name="highlights">Program highlights: %s</string>
 </resources>

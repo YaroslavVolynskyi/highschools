@@ -8,5 +8,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="highschool_item_background">#cccccc</color>
+    <color name="highschool_item_background">#FFFFFF</color>
+    <color name="highschool_item_background_ripple">#808080</color>
 </resources>

@@ -2,7 +2,6 @@ package com.example.nychighschools
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
@@ -16,26 +15,30 @@ const val LIST_STATE_KEY = "listStateKey"
 class HighschoolsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHighschoolsBinding
-    val highschoolViewModel: HighschoolsViewModel by viewModels()
+    private val highschoolViewModel: HighschoolsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHighschoolsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+
         binding.forceRefreshButton.setOnClickListener { highschoolViewModel.forceRefresh() }
         highschoolViewModel.getHighschoolsLiveData().observe(this) { highschoolsList ->
             binding.totalSchoolsTextView.text = getString(R.string.total_schools, highschoolsList.size)
             binding.highSchoolsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-                adapter = HighschoolsRecyclerAdapter(highschoolsList)
+                adapter = HighschoolsRecyclerAdapter(highschoolsList) { highschool ->
+                    startActivity(DetailsActivity.getDetailsActivityIntent(this@HighschoolsActivity, highschool))
+                }
                 if (adapter!!.itemCount > 0 && savedInstanceState?.getParcelable<Parcelable>(LIST_STATE_KEY) != null) {
                     layoutManager!!.onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY))
                 }
             }
         }
         highschoolViewModel.getErrorLiveData().observe(this) { showAlertDialog(this, it) }
+
         highschoolViewModel.fetchHighschoolsData()
-        setSupportActionBar(binding.toolbar)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -8,5 +8,7 @@
         <item name="android:padding">@dimen/button_padding</item>
     </style>
 
-    <style name="Theme.NycHighschools" parent="Theme.AppCompat.Light.NoActionBar"></style>
+    <style name="Theme.NycHighschools" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

@@ -10,11 +10,13 @@
     android:layout_marginEnd="@dimen/recycler_item_padding"
     android:elevation="@dimen/highschool_item_elevation"
     app:cardCornerRadius="@dimen/highschool_item_radius"
-    android:background="@color/highschool_item_background">
+    >
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/button_padding"
+        android:background="@drawable/school_item_background"
         >
 
         <TextView
