@@ -5,23 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.room.EmptyResultSetException
 import com.example.nychighschools.data.Highschool
 import com.example.nychighschools.data.HighschoolSatInfo
 import com.example.nychighschools.database.HighschoolDatabase
 import com.example.nychighschools.utils.ErrorHandler
 import com.example.nychighschools.utils.PreferenceHelper
 import com.example.nychighschools.utils.SingleLiveData
-import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.SingleSource
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.BiFunction
 
-const val MIN_UPDATE_TIME: Long = 40000L
+const val MIN_UPDATE_TIME: Long = 40000L // 40 seconds update time
 
 class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
 
@@ -36,7 +31,7 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
      * Tries to fetch high schools' data from database. If database is still empty, or much time have passed from last update
      * (more then [MIN_UPDATE_TIME]), then we launch request to server (get high schools from [RetrofitProvider.highschoolsApi].
      *
-     * In onSuccess from server - update database, and last update time.
+     * In onSuccess callback from server - update database, and last update time.
      */
     // todo   change this fetch data to run 2 requests (get schools info, get sat info),
     // todo   put data into two separate database tables, then get merged info by fetching data from database using JOIN
@@ -75,11 +70,6 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
         fetchHighschoolsData()
     }
 
-    private fun handleThrowable(throwable: Throwable) {
-        Log.e("fail", throwable.message.toString())
-        errorLiveData.postValue(ErrorHandler.getErrorMessage(throwable))
-    }
-
     fun getHighschoolsLiveData(): LiveData<List<Highschool>> {
         return highschoolsLiveData
     }
@@ -97,6 +87,10 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
         return loadingLiveData
     }
 
+    /**
+     * add missing info about SAT scores from [satInfoList] into [highschoolsList]
+     * @return list of highschools with complete info
+     */
     private fun mergeHighschoolsInfo(highschoolsList: List<Highschool>, satInfoList: List<HighschoolSatInfo>): List<Highschool> {
         highschoolsList.forEach{ highschool ->
             satInfoList.find { it.dbn == highschool.dbn }?.let { satInfo ->
@@ -106,6 +100,11 @@ class HighschoolsViewModel(stateHandle: SavedStateHandle) : ViewModel() {
             }
         }
         return highschoolsList
+    }
+
+    private fun handleThrowable(throwable: Throwable) {
+        Log.e("fail", throwable.message.toString())
+        errorLiveData.postValue(ErrorHandler.getErrorMessage(throwable))
     }
 
     private fun isTimeForNewUpdate(): Boolean {

@@ -171,6 +171,7 @@
                 android:id="@+id/divider"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
+                android:background="@color/purple_200"
                 android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/languageClasses"
                 app:layout_constraintStart_toEndOf="@id/startGuideline"
