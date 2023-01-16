@@ -80,6 +80,16 @@ class HighschoolsViewModel(
                             Utils.mergeHighschoolsInfo(highschoolsList, satList)
                             return@zipWith highschoolsList
                         }
+                        .onErrorResumeNext{ throwable ->
+                            if (list.isNotEmpty()) {
+                                /**
+                                 * we couldn't get fresh info, so we're just showing last available schools list
+                                 */
+                                return@onErrorResumeNext Single.just(list)
+                            } else {
+                                return@onErrorResumeNext Single.error(throwable)
+                            }
+                        }
                         .doOnSuccess { highschoolsList ->
                             highschoolDao.insertHighschoolsList(highschoolsList)
                                 .doOnComplete { preferehcesHelper.saveUpdateTime() }
