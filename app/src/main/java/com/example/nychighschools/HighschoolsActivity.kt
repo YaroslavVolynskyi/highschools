@@ -16,7 +16,7 @@ const val LIST_STATE_KEY = "listStateKey"
 class HighschoolsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHighschoolsBinding
-    private val highschoolViewModel: HighschoolsViewModel by viewModels()
+    private val highschoolViewModel: HighschoolsViewModel by viewModels { HighschoolsViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

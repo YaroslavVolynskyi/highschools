@@ -1,5 +1,6 @@
 package com.example.nychighschools.database
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -9,13 +10,14 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executors
 
 @Database(entities = [Highschool::class], version = 1, exportSchema = false)
-abstract class HighschoolDatabase: RoomDatabase() {
+abstract class HighschoolDatabase : RoomDatabase() {
 
     abstract fun highschoolDao(): HighschoolDao
 
     companion object {
 
         private const val databaseName = "HighschoolDatabase.db"
+        private const val testDatabaseName = "TESTING_HighschoolDatabase.db"
         private var INSTANCE: HighschoolDatabase? = null
 
         val databaseScheduler = Schedulers.from(Executors.newFixedThreadPool(1))
@@ -34,6 +36,15 @@ abstract class HighschoolDatabase: RoomDatabase() {
                 }
             }
             return INSTANCE!!
+        }
+
+        fun getTestInstance(context: Context): HighschoolDatabase {
+            return Room.databaseBuilder(
+                context,
+                HighschoolDatabase::class.java,
+                testDatabaseName
+            ).fallbackToDestructiveMigration()
+                .build()
         }
     }
 }
