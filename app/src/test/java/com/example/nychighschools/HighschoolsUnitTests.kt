@@ -1,66 +1,66 @@
 package com.example.nychighschools
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.test.core.app.ApplicationProvider
-import com.example.nychighschools.database.HighschoolDatabase
-import com.example.nychighschools.utils.PreferenceHelper
-import io.reactivex.disposables.CompositeDisposable
-import org.junit.After
+import com.example.nychighschools.data.Highschool
+import com.example.nychighschools.data.HighschoolSatInfo
+import com.example.nychighschools.utils.Utils
 import org.junit.Assert.assertEquals
 
-import org.junit.Before
 import org.junit.Test
 
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [28])
 class HighschoolsUnitTests {
 
-    @Before
-    fun initResources() {
-        RetrofitProvider.init()
+    val schoolsList: ArrayList<Highschool> = ArrayList()
+    val satInfoList: ArrayList<HighschoolSatInfo> = ArrayList()
+
+    private fun initResources() {
+        val elementsCount = 5
+        schoolsList.clear()
+        satInfoList.clear()
+        schoolsList.apply {
+            for (i in 0..elementsCount) {
+                add(Highschool.getHighschoolTestInstance("dbn $i", "name - $i"))
+            }
+        }
+        satInfoList.apply {
+            for (i in 0..elementsCount) {
+                add(
+                    HighschoolSatInfo.getSatInfoTestInstance(
+                        "dbn $i",
+                        "${i + 1}",
+                        "${i + 1}",
+                        "${i + 1}"
+                    )
+                )
+            }
+        }
     }
 
-    private val compositeDisposable = CompositeDisposable()
-    private val highscoolsViewModel = HighschoolsViewModel(
-        SavedStateHandle(),
-        HighschoolDatabase.getTestInstance(ApplicationProvider.getApplicationContext()).highschoolDao(),
-        PreferenceHelper.getInstance(),
-        RetrofitProvider.highschoolsApi
-    )
-
+    /**
+     * This test check if merge of two lists using [Utils.mergeHighschoolsInfo] was successful
+     * and that [schoolsList] have sat info from [satInfoList]
+     */
     @Test
-    fun check_lists_merge_isCorrect() {
-//        highscoolsViewModel.fetchHighschoolsData(database) {
-//            val disposable = database
-//                .getHighschoolsList()
-//                .subscribeOn(HighschoolDatabase.databaseScheduler)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({ highscoolsList ->
-//                    assert(highscoolsList.isNotEmpty())
-//                    }, { throwable ->
-//                    assert(false)
-//                })
-//            compositeDisposable.add(disposable)
-//        }
-        assertEquals(7, 2 + 5)
+    fun check_that_merged_lists_contain_sat_info() {
+        initResources()
+        Utils.mergeHighschoolsInfo(schoolsList, satInfoList)
+        for (i in 0 until schoolsList.size) {
+            assertEquals("${i + 1}", schoolsList[i].satScoreReading)
+            assertEquals("${i + 1}", schoolsList[i].satScoreMath)
+            assertEquals("${i + 1}", schoolsList[i].satScoreWriting)
+        }
     }
 
+    /**
+     * This test check that without merge using [Utils.mergeHighschoolsInfo], [schoolsList] will not
+     * contain sat info from [satInfoList]
+     */
     @Test
-    fun testOk() {
-        assertEquals(7, 2 + 5)
-    }
-
-    @After
-    fun clearResources() {
-        compositeDisposable.dispose()
+    fun check_that_NOT_merged_lists_DONT_contain_sat_info() {
+        initResources()
+        for (i in 0 until schoolsList.size) {
+            assertEquals(null, schoolsList[i].satScoreReading)
+            assertEquals(null, schoolsList[i].satScoreMath)
+            assertEquals(null, schoolsList[i].satScoreWriting)
+        }
     }
 }
