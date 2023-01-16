@@ -7,7 +7,6 @@ import com.example.nychighschools.NycHighschoolsApplication
 
 class PreferenceHelper {
 
-
     companion object {
 
         private const val UPDATE_PREFERENCES_NAME = "updatePreferences"
@@ -28,7 +27,7 @@ class PreferenceHelper {
     }
 
     fun saveUpdateTime() {
-        getPreferences().edit().putString(UPDATE_TIME_KEY, System.currentTimeMillis().toString()).apply()
+        saveUpdateTime(System.currentTimeMillis().toString())
     }
 
     fun getLastUpdateTime(): Long {
@@ -36,7 +35,11 @@ class PreferenceHelper {
     }
 
     fun resetLastUpdateTime() {
-        getPreferences().edit().putString(UPDATE_TIME_KEY, "0").apply()
+        saveUpdateTime("0")
+    }
+
+    private fun saveUpdateTime(time: String) {
+        getPreferences().edit().putString(UPDATE_TIME_KEY, time).apply()
     }
 
     private fun getPreferences(): SharedPreferences {

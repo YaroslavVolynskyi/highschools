@@ -3,14 +3,13 @@ package com.example.nychighschools
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nychighschools.data.Highschool
 import com.example.nychighschools.databinding.HighschoolItemBinding
 
 class HighschoolsRecyclerAdapter(
     private var highschools: List<Highschool>,
-    val itemClickListener: (highschool: Highschool) -> Unit
+    private val itemClickListener: (highschool: Highschool) -> Unit
 ) : RecyclerView.Adapter<HighschoolsRecyclerAdapter.HighschoolViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HighschoolViewHolder {

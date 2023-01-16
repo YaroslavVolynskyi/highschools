@@ -8,6 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
+// todo: This singleton can be provided by Dagger2 or some other dependency injection library.
 object RetrofitProvider {
 
     const val BASE_URL = "https://data.cityofnewyork.us/"

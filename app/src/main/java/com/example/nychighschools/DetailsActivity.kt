@@ -13,6 +13,7 @@ import com.example.nychighschools.databinding.ActivityDetailsBinding
 import com.example.nychighschools.utils.init
 import com.google.gson.Gson
 
+// todo Given more time I would definetely create more sophisticated design for this activity :)
 class DetailsActivity: AppCompatActivity() {
 
     companion object {
