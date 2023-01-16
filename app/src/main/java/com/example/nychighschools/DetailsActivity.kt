@@ -34,6 +34,7 @@ class DetailsActivity: AppCompatActivity() {
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+        binding.backIcon.setOnClickListener { finish() }
         val highschool = Gson().fromJson(intent.getStringExtra(HIGHSCHOOL_KEY), Highschool::class.java)
         initViews(highschool)
     }

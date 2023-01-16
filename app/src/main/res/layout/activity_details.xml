@@ -20,15 +20,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/schoolName"
+            <ImageView
+                android:id="@+id/backIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="@string/school_name"
-                android:gravity="center"
-                android:textAllCaps="true"
-                android:textColor="@android:color/white"
+                android:paddingEnd="@dimen/recycler_item_padding"
+                android:src="@drawable/ic_back"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                />
+
+            <TextView
+                android:id="@+id/schoolName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="@string/school_name"
+                android:layout_marginEnd="@dimen/recycler_item_padding"
+                android:gravity="start|center_vertical"
+                android:textAllCaps="true"
+                android:ellipsize="end"
+                android:textColor="@android:color/white"
+                android:layout_toEndOf="@id/backIcon"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentBottom="true"
                 />
