@@ -62,5 +62,8 @@ class DetailsActivity: AppCompatActivity() {
         binding.extraculicular.init(getString(R.string.extracuricular, highschool.extracurricularActivities))
         binding.programHighlights.init(getString(R.string.highlights, highschool.programHighlights))
         binding.overview.init(getString(R.string.overview, highschool.overviewParagraph))
+        binding.satMath.init(getString(R.string.math_avg_score, highschool.satScoreMath))
+        binding.satReading.init(getString(R.string.reading_avg_score, highschool.satScoreReading))
+        binding.satWriting.init(getString(R.string.writing_avg_score, highschool.satScoreWriting))
     }
 }
