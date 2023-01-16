@@ -104,7 +104,7 @@ class HighschoolInstrumentedTest {
     /**
      * For some reason rx chain from [HighschoolsViewModel.fetchHighschoolsData] can't be tested.
      * Given more time I would fix this somehow. Maybe I would try to use Mockito framework
-     * for mocking all network and database call, and not use explicit test instances of database and API,
+     * for mocking all network and database calls, and not use explicit test instances of database and API,
      * but to use mock objects.
      */
     @Test
