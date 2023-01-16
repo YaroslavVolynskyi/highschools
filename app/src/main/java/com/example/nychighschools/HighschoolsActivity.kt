@@ -2,11 +2,16 @@ package com.example.nychighschools
 
 import android.app.AlertDialog
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nychighschools.databinding.ActivityHighschoolsBinding
@@ -48,6 +53,8 @@ class HighschoolsActivity : AppCompatActivity() {
         }
 
         highschoolViewModel.fetchHighschoolsData()
+
+        initNetworkConnectivityObserver()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -72,5 +79,25 @@ class HighschoolsActivity : AppCompatActivity() {
             .setIcon(android.R.drawable.ic_dialog_alert)
             .setCancelable(true)
             .show()
+    }
+
+    private fun initNetworkConnectivityObserver() {
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .build()
+        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                highschoolViewModel.fetchHighschoolsData()
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+            }
+        }
+        val connectivityManager = ContextCompat.getSystemService(this, ConnectivityManager::class.java) as ConnectivityManager
+        connectivityManager.requestNetwork(networkRequest, networkCallback)
     }
 }
