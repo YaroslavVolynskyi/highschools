@@ -4,8 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.example.nychighschools.NycHighschoolsApplication
 
-
-class PreferenceHelper {
+open class PreferenceHelper {
 
     companion object {
 
@@ -26,23 +25,23 @@ class PreferenceHelper {
         }
     }
 
-    fun saveUpdateTime() {
-        saveUpdateTime(System.currentTimeMillis().toString())
+    open fun saveUpdateTime(context: Context = NycHighschoolsApplication.appContext) {
+        saveUpdateTime(context, System.currentTimeMillis().toString())
     }
 
-    fun getLastUpdateTime(): Long {
-        return getPreferences().getString(UPDATE_TIME_KEY, "0")!!.toLong()
+    open fun getLastUpdateTime(context: Context = NycHighschoolsApplication.appContext): Long {
+        return getPreferences(context).getString(UPDATE_TIME_KEY, "0")!!.toLong()
     }
 
-    fun resetLastUpdateTime() {
-        saveUpdateTime("0")
+    open fun resetLastUpdateTime(context: Context = NycHighschoolsApplication.appContext) {
+        saveUpdateTime(context,"0")
     }
 
-    private fun saveUpdateTime(time: String) {
-        getPreferences().edit().putString(UPDATE_TIME_KEY, time).apply()
+    private fun saveUpdateTime(context: Context = NycHighschoolsApplication.appContext, time: String) {
+        getPreferences(context).edit().putString(UPDATE_TIME_KEY, time).apply()
     }
 
-    private fun getPreferences(): SharedPreferences {
-        return NycHighschoolsApplication.appContext.getSharedPreferences(UPDATE_PREFERENCES_NAME, Context.MODE_PRIVATE)
+    private fun getPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences(UPDATE_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
 }

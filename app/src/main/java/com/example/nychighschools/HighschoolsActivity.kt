@@ -39,6 +39,7 @@ class HighschoolsActivity : AppCompatActivity() {
                 }
             }
         }
+
         highschoolViewModel.getErrorLiveData().observe(this) { showAlertDialog(this, it) }
 
         // todo later some other kind of loading indicator can be implemented

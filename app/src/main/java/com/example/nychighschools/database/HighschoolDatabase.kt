@@ -1,6 +1,5 @@
 package com.example.nychighschools.database
 
-import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -36,15 +35,6 @@ abstract class HighschoolDatabase : RoomDatabase() {
                 }
             }
             return INSTANCE!!
-        }
-
-        fun getTestInstance(context: Context): HighschoolDatabase {
-            return Room.databaseBuilder(
-                context,
-                HighschoolDatabase::class.java,
-                testDatabaseName
-            ).fallbackToDestructiveMigration()
-                .build()
         }
     }
 }

@@ -19,4 +19,21 @@ data class HighschoolSatInfo(
     @Expose
     @SerializedName("sat_writing_avg_score")
     val satScoreWriting: String?
-)
+) {
+    companion object {
+        fun getSatInfoTestInstance(
+            dbn: String,
+            satReading: String,
+            satMath: String,
+            satWriting: String
+        ): HighschoolSatInfo {
+            return HighschoolSatInfo(
+                dbn = dbn,
+                satScoreMath = satMath,
+                satScoreReading = satReading,
+                satScoreWriting = satWriting,
+                schoolName = null
+            )
+        }
+    }
+}

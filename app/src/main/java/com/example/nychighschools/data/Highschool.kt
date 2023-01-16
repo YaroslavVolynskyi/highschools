@@ -2,6 +2,7 @@ package com.example.nychighschools.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.nychighschools.database.HighschoolDao
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -63,4 +64,12 @@ data class Highschool(
 ) {
     @Expose
     var isExpanded: Boolean = false
+
+    companion object {
+        fun getHighschoolTestInstance(dbn: String, name: String): Highschool {
+            return Highschool(dbn = dbn, schoolName = name, null, null, null, null,
+            null, null, null, null, null, null,
+                null, null, null, null, null, null)
+        }
+    }
 }
