@@ -30,16 +30,18 @@ class HighschoolsActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         binding.forceRefreshButton.setOnClickListener { highschoolViewModel.forceRefresh() }
-        highschoolViewModel.getHighschoolsLiveData().observe(this) { highschoolsList ->
+        highschoolViewModel.getHighschoolsLiveData().observe(this) { highschoolsListState ->
             binding.loadingIndicator.visibility = View.GONE
-            binding.totalSchoolsTextView.text = getString(R.string.total_schools, highschoolsList.size)
+            binding.totalSchoolsTextView.text = getString(R.string.total_schools, highschoolsListState.schools.size)
             binding.highSchoolsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-                adapter = HighschoolsRecyclerAdapter(highschoolsList) { highschool ->
+                adapter = HighschoolsRecyclerAdapter(highschoolsListState.schools) { highschool ->
                     // todo later registerForActivityResult if we would need some response from details activity.
                     startActivity(DetailsActivity.getDetailsActivityIntent(this@HighschoolsActivity, highschool))
                 }
-                if (adapter!!.itemCount > 0 && savedInstanceState?.getParcelable<Parcelable>(LIST_STATE_KEY) != null) {
+                if (adapter!!.itemCount > 0
+                    && !highschoolsListState.isFromForceUpdate
+                    && savedInstanceState?.getParcelable<Parcelable>(LIST_STATE_KEY) != null) {
                     layoutManager!!.onRestoreInstanceState(savedInstanceState.getParcelable(LIST_STATE_KEY))
                 }
             }
@@ -87,14 +89,10 @@ class HighschoolsActivity : AppCompatActivity() {
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .build()
-        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        val networkCallback = object: ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
                 highschoolViewModel.fetchHighschoolsData()
-            }
-
-            override fun onLost(network: Network) {
-                super.onLost(network)
             }
         }
         val connectivityManager = ContextCompat.getSystemService(this, ConnectivityManager::class.java) as ConnectivityManager

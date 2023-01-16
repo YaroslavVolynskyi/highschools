@@ -53,7 +53,7 @@ class HighschoolsViewModel(
         }
     }
 
-    private val highschoolsLiveData: MutableLiveData<List<Highschool>> = MutableLiveData()
+    private val highschoolsLiveData: MutableLiveData<SchoolsState> = MutableLiveData()
     private val errorLiveData: SingleLiveData<String> = SingleLiveData()
     private val loadingLiveData: SingleLiveData<Boolean> = SingleLiveData()
 
@@ -69,7 +69,7 @@ class HighschoolsViewModel(
      *
      * In onSuccess callback from server - update database, and last update time.
      */
-    fun fetchHighschoolsData(onSuccessFinishAction: (() -> Unit)? = null) {
+    fun fetchHighschoolsData(onSuccessFinishAction: (() -> Unit)? = null, isFromForceUpdate: Boolean = false) {
         val disposable = highschoolDao.getHighschoolsList()
             .subscribeOn(databaseScheduler)
             .flatMap { list ->
@@ -104,7 +104,7 @@ class HighschoolsViewModel(
             .doOnSubscribe { d -> loadingLiveData.postValue(true) }
             .doFinally { loadingLiveData.postValue(false) }
             .subscribe({ list ->
-                highschoolsLiveData.postValue(list)
+                highschoolsLiveData.postValue(SchoolsState(list, isFromForceUpdate))
                 onSuccessFinishAction?.invoke()
             }, { throwable ->
                 handleThrowable(throwable)
@@ -114,10 +114,10 @@ class HighschoolsViewModel(
 
     fun forceRefresh() {
         preferehcesHelper.resetLastUpdateTime()
-        fetchHighschoolsData()
+        fetchHighschoolsData(isFromForceUpdate = true)
     }
 
-    fun getHighschoolsLiveData(): LiveData<List<Highschool>> {
+    fun getHighschoolsLiveData(): LiveData<SchoolsState> {
         return highschoolsLiveData
     }
 
